@@ -1,0 +1,7 @@
+{
+  "name": "CareerForge AI",
+  "description": "AI Resume & Portfolio Builder with professional modern templates, AI writing assistance, and seamless Razorpay checkout.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

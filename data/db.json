@@ -1,0 +1,24 @@
+{
+  "users": {
+    "usr_a5a590c0744c": {
+      "id": "usr_a5a590c0744c",
+      "name": "Test User",
+      "email": "test@example.com",
+      "passwordHash": "ca5345c7324953afeb4954e6af9815f704404687d1038296450c56f90e3df831",
+      "plan": "premium",
+      "aiGenerationsUsed": 0,
+      "createdAt": "2026-10-11T05:03:17.528Z",
+      "razorpayPayments": [
+        {
+          "orderId": "order_test_999",
+          "paymentId": "pay_test_999",
+          "amount": 199,
+          "plan": "premium",
+          "date": "2026-10-11T05:03:25.740Z"
+        }
+      ]
+    }
+  },
+  "resumes": {},
+  "portfolios": {}
+}
