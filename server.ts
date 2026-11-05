@@ -178,60 +178,42 @@ app.get('/api/razorpay/config', (_req, res) => {
     isRealMode: isRealRazorpay,
     testMode: !isRealRazorpay,
     plans: {
-      medium: { price: 149, currency: 'INR', name: 'Medium Plan' },
-      premium: { price: 199, currency: 'INR', name: 'Premium Plan' },
+      medium: { price: 9, currency: 'INR', name: 'Medium Plan' },
+      premium: { price: 29, currency: 'INR', name: 'Premium Plan' },
     },
   });
 });
 
 app.post('/api/razorpay/create-order', async (req, res) => {
   try {
-    const { plan, userId } = req.body;
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    const userId = token;
+    const { plan } = req.body;
+    if (!token || !db.users[token]) return res.status(401).json({ error: 'Please log in before purchasing a plan.' });
     if (plan !== 'medium' && plan !== 'premium') {
       return res.status(400).json({ error: 'Invalid plan selected' });
     }
 
-    const amountInPaise = plan === 'medium' ? 14900 : 19900;
+    const amountInPaise = plan === 'medium' ? 900 : 2900;
     const currency = 'INR';
     const receipt = `rcpt_${plan}_${Date.now().toString().slice(-6)}`;
 
-    if (razorpayInstance && isRealRazorpay) {
-      try {
-        const order = await razorpayInstance.orders.create({
-          amount: amountInPaise,
-          currency,
-          receipt,
-          notes: {
-            plan,
-            userId: userId || 'anonymous',
-          },
-        });
-
-        return res.json({
-          orderId: order.id,
-          amount: order.amount,
-          currency: order.currency,
-          keyId: razorpayKeyId,
-          plan,
-          isSimulated: false,
-        });
-      } catch (err: any) {
-        console.warn('Real Razorpay API call failed, falling back to secure test sandbox order:', err?.message || err);
-      }
+    if (!razorpayInstance || !isRealRazorpay) {
+      return res.status(503).json({ error: 'Razorpay Live/Test API credentials are not configured. Payments are temporarily unavailable.' });
     }
-
-    // Secure Test Mode Order Creation
-    const testOrderId = `order_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
-    res.json({
-      orderId: testOrderId,
+    const order = await razorpayInstance.orders.create({
       amount: amountInPaise,
       currency,
+      receipt,
+      notes: { plan, userId },
+    });
+    return res.json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
       keyId: razorpayKeyId,
       plan,
-      isSimulated: true,
-      notes: {
-        environment: 'Razorpay Test Sandbox',
-      },
+      isSimulated: false,
     });
   } catch (error: any) {
     console.error('Error in /api/razorpay/create-order:', error);
@@ -239,79 +221,53 @@ app.post('/api/razorpay/create-order', async (req, res) => {
   }
 });
 
-app.post('/api/razorpay/verify-payment', (req, res) => {
+app.post('/api/razorpay/verify-payment', async (req, res) => {
   try {
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      plan,
-      userId,
-    } = req.body;
-
-    if (!razorpay_order_id || !razorpay_payment_id || !plan) {
-      return res.status(400).json({ error: 'Missing required payment verification parameters.' });
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    const user = token ? db.users[token] : null;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    if (!user || !razorpayInstance || !isRealRazorpay) {
+      return res.status(401).json({ success: false, error: 'Authenticated account and configured Razorpay credentials are required.' });
+    }
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ success: false, error: 'Missing Razorpay verification details.' });
     }
 
-    let isValid = false;
-
-    if (isRealRazorpay && razorpay_signature) {
-      // Standard Razorpay HMAC-SHA256 signature verification
-      const body = razorpay_order_id + '|' + razorpay_payment_id;
-      const expectedSignature = crypto
-        .createHmac('sha256', razorpayKeySecret)
-        .update(body.toString())
-        .digest('hex');
-
-      isValid = expectedSignature === razorpay_signature;
-      if (!isValid) {
-        console.warn('Signature verification mismatch for real Razorpay payload');
-      }
-    } else {
-      // In Test/Sandbox mode verification: verify payload integrity
-      // Validates order ID structure and payment ID presence
-      isValid = Boolean(
-        razorpay_payment_id &&
-        razorpay_order_id &&
-        (razorpay_signature || razorpay_order_id.startsWith('order_'))
-      );
+    const expectedSignature = crypto.createHmac('sha256', razorpayKeySecret)
+      .update(razorpay_order_id + '|' + razorpay_payment_id)
+      .digest('hex');
+    const supplied = Buffer.from(razorpay_signature, 'hex');
+    const expected = Buffer.from(expectedSignature, 'hex');
+    if (supplied.length !== expected.length || !crypto.timingSafeEqual(supplied, expected)) {
+      return res.status(400).json({ success: false, error: 'Invalid payment signature.' });
     }
 
-    if (!isValid) {
-      return res.status(400).json({
-        success: false,
-        error: 'Payment signature verification failed. Untrusted transaction.',
-      });
+    const payment: any = await razorpayInstance.payments.fetch(razorpay_payment_id);
+    if (payment.order_id !== razorpay_order_id || payment.status !== 'captured') {
+      return res.status(400).json({ success: false, error: 'Payment is not captured for this order.' });
+    }
+    const plan = payment.amount === 900 ? 'medium' : payment.amount === 2900 ? 'premium' : null;
+    if (!plan || payment.currency !== 'INR') {
+      return res.status(400).json({ success: false, error: 'Payment amount does not match an available plan.' });
     }
 
-    // Upgrade user plan if userId provided
-    let upgradedUser: any = null;
-    if (userId && db.users[userId]) {
-      const user = db.users[userId];
-      user.plan = plan;
-      user.razorpayPayments = user.razorpayPayments || [];
+    user.plan = plan;
+    user.razorpayPayments = user.razorpayPayments || [];
+    if (!user.razorpayPayments.some(p => p.paymentId === razorpay_payment_id)) {
       user.razorpayPayments.push({
         orderId: razorpay_order_id,
         paymentId: razorpay_payment_id,
-        amount: plan === 'medium' ? 149 : 199,
+        amount: payment.amount / 100,
         plan,
         date: new Date().toISOString(),
       });
       saveDB(db);
-      const { passwordHash: _, ...safe } = user;
-      upgradedUser = safe;
     }
-
-    return res.json({
-      success: true,
-      message: `Successfully upgraded to ${plan.toUpperCase()} plan!`,
-      plan,
-      user: upgradedUser,
-      verifiedAt: new Date().toISOString(),
-    });
+    const { passwordHash: _, ...safeUser } = user;
+    return res.json({ success: true, plan, user: safeUser, verifiedAt: new Date().toISOString() });
   } catch (error: any) {
-    console.error('Error in /api/razorpay/verify-payment:', error);
-    res.status(500).json({ error: 'Internal payment verification error: ' + error?.message });
+    console.error('Razorpay verification error:', error);
+    return res.status(500).json({ success: false, error: 'Could not verify payment. Contact support if money was deducted.' });
   }
 });
 
