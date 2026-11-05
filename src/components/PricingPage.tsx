@@ -107,7 +107,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               <p className="text-xs text-slate-500 mb-6">Designed for active job seekers wanting high-impact templates.</p>
 
               <div className="flex items-baseline gap-1.5 mb-6">
-                <span className="text-4xl font-black text-slate-950">₹149</span>
+                <span className="text-4xl font-black text-slate-950">₹9</span>
                 <span className="text-xs text-blue-700 font-semibold">/ One-time payment</span>
               </div>
 
@@ -203,7 +203,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               <p className="text-xs text-slate-500 mb-6">Uncapped capability for ambitious builders and executives.</p>
 
               <div className="flex items-baseline gap-1.5 mb-6">
-                <span className="text-4xl font-black text-slate-950">₹199</span>
+                <span className="text-4xl font-black text-slate-950">₹29</span>
                 <span className="text-xs text-purple-700 font-semibold">/ One-time payment</span>
               </div>
 
