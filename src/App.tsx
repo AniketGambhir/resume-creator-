@@ -307,6 +307,11 @@ export default function App() {
 
   // 1. Open confirmation modal first (Requirement 11)
   const handleSelectPlan = (planToUpgrade: 'medium' | 'premium') => {
+    if (!user || !token) {
+      setIsAuthModalOpen(true);
+      showToast('Please sign in to purchase a plan.', 'info');
+      return;
+    }
     setSelectedPlanForConfirmation(planToUpgrade);
     setIsConfirmationModalOpen(true);
   };
