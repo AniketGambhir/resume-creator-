@@ -43,19 +43,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 no-print">
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#dce8f5] no-print">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Brand Logo */}
         <div
           onClick={() => onNavigate('landing')}
           className="flex items-center gap-2.5 cursor-pointer group select-none"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#78b8df] via-[#a7a8df] to-[#eeb49c] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-base tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
-              CareerForge <span className="text-blue-600">AI</span>
+            <span className="font-extrabold text-base tracking-tight text-slate-900 group-hover:text-[#659bc3] transition-colors">
+              CareerForge <span className="text-[#659bc3]">AI</span>
             </span>
           </div>
         </div>
@@ -71,8 +71,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => onNavigate(link.id as any)}
                 className={`px-3.5 py-2 rounded-lg transition-colors ${
                   isActive
-                    ? 'text-blue-600 bg-blue-50/70 font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    ? 'text-blue-600 bg-[#edf6fc] font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-[#f5f7fc]'
                 }`}
               >
                 {link.label}
@@ -91,9 +91,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={onUpgradeClick}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-bold uppercase transition-transform hover:scale-105 ${
                   plan === 'premium'
-                    ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                    ? 'bg-[#f1edfa] text-[#756ca9] border border-[#d8cfee]'
                     : plan === 'medium'
-                    ? 'bg-blue-100 text-blue-800 border border-blue-200'
+                    ? 'bg-[#edf6fc] text-[#527fa1] border border-[#cfe2f1]'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                 }`}
               >
@@ -130,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('builder')}
-                className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-xs transition-colors"
+                className="px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r from-[#78b8df] to-[#a7a8df] hover:brightness-95 active:brightness-90 rounded-xl shadow-xs transition-colors"
               >
                 Get Started
               </button>
@@ -153,7 +153,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-6 py-4 space-y-3 animate-fadeIn">
+        <div className="md:hidden border-t border-[#dce8f5] bg-white px-6 py-4 space-y-3 animate-fadeIn">
           <div className="space-y-1">
             {navLinks.map((link) => (
               <button
@@ -165,7 +165,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold ${
                   currentView === link.id
-                    ? 'text-blue-600 bg-blue-50'
+                    ? 'text-blue-600 bg-[#edf6fc]'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
@@ -187,7 +187,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onUpgradeClick();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full py-2 text-xs font-semibold text-center bg-blue-50 text-blue-700 rounded-lg"
+                  className="w-full py-2 text-xs font-semibold text-center bg-[#edf6fc] text-[#527fa1] rounded-lg"
                 >
                   Manage Subscription
                 </button>
