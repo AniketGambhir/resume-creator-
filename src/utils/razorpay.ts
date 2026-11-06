@@ -9,6 +9,7 @@ declare global {
 export interface CheckoutOptions {
   plan: 'medium' | 'premium';
   userId?: string;
+  token?: string;
   userName?: string;
   userEmail?: string;
   onSuccess: (data: { plan: string; user?: any }) => void;
@@ -26,6 +27,7 @@ export async function initiateRazorpayCheckout(options: CheckoutOptions) {
   const {
     plan,
     userId,
+    token,
     userName = 'CareerForge User',
     userEmail = 'user@careerforge.dev',
     onSuccess,
@@ -38,8 +40,8 @@ export async function initiateRazorpayCheckout(options: CheckoutOptions) {
     // 1. Create order securely on backend
     const orderRes = await fetch('/api/razorpay/create-order', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan, userId }),
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: JSON.stringify({ plan }),
     });
 
     if (!orderRes.ok) {
@@ -64,7 +66,7 @@ export async function initiateRazorpayCheckout(options: CheckoutOptions) {
           email: userEmail,
         },
         theme: {
-          color: '#2563eb', // Blue AI accent
+          color: '#A9D4EF',
         },
         modal: {
           ondismiss: () => {
@@ -76,13 +78,11 @@ export async function initiateRazorpayCheckout(options: CheckoutOptions) {
             // 2. Verify payment signature on backend
             const verifyRes = await fetch('/api/razorpay/verify-payment', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
               body: JSON.stringify({
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
-                plan,
-                userId,
               }),
             });
 
@@ -96,7 +96,7 @@ export async function initiateRazorpayCheckout(options: CheckoutOptions) {
               particleCount: 120,
               spread: 70,
               origin: { y: 0.6 },
-              colors: ['#2563eb', '#6366f1', '#10b981', '#f59e0b'],
+              colors: ['#A9D4EF', '#C9C9F2', '#F8C6AD', '#FFFFFF'],
             });
 
             onSuccess({ plan, user: verifyData.user });
@@ -106,51 +106,13 @@ export async function initiateRazorpayCheckout(options: CheckoutOptions) {
         },
       };
 
-      try {
-        const razorpay = new window.Razorpay(rzpOptions);
-        razorpay.on('payment.failed', function (resp: any) {
-          onFailure(resp.error?.description || 'Payment failed or was cancelled by user.');
-        });
-        razorpay.open();
-      } catch (sdkError: any) {
-        console.warn('Official Razorpay SDK open failed, switching to interactive Test Sandbox:', sdkError);
-        if (openSimulatedModal) {
-          openSimulatedModal({ orderId, amount, currency, plan });
-        } else {
-          throw sdkError;
-        }
-      }
+      const razorpay = new window.Razorpay(rzpOptions);
+      razorpay.on('payment.failed', function (resp: any) {
+        onFailure(resp.error?.description || 'Payment failed or was cancelled by user.');
+      });
+      razorpay.open();
     } else {
-      // Razorpay test simulation dialog (covers cases where external script is blocked or in test sandbox)
-      if (openSimulatedModal) {
-        openSimulatedModal({ orderId, amount, currency, plan });
-      } else {
-        // Direct test verification fallback
-        const mockPaymentId = `pay_test_${Date.now()}`;
-        const verifyRes = await fetch('/api/razorpay/verify-payment', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            razorpay_order_id: orderId,
-            razorpay_payment_id: mockPaymentId,
-            razorpay_signature: 'test_signature_verified',
-            plan,
-            userId,
-          }),
-        });
-
-        const verifyData = await verifyRes.json();
-        if (verifyData.success) {
-          confetti({
-            particleCount: 100,
-            spread: 60,
-            origin: { y: 0.6 },
-          });
-          onSuccess({ plan, user: verifyData.user });
-        } else {
-          onFailure(verifyData.error || 'Verification failed');
-        }
-      }
+      throw new Error('Razorpay Checkout could not load. Please refresh the page and try again.');
     }
   } catch (error: any) {
     onFailure(error.message || 'Payment initiation failed.');
