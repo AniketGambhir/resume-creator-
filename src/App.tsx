@@ -318,6 +318,7 @@ export default function App() {
 
     await initiateRazorpayCheckout({
       plan: planToUpgrade,
+      token: token || undefined,
       userId: user?.id,
       userName: user?.name,
       userEmail: user?.email,
@@ -337,11 +338,6 @@ export default function App() {
       onDismiss: () => {
         setIsLoadingPlan(null);
         showToast('Payment Cancelled. No charges were made.', 'info');
-      },
-      openSimulatedModal: (orderData) => {
-        setIsLoadingPlan(null);
-        setRazorpayOrderData(orderData);
-        setIsRazorpayModalOpen(true);
       },
     });
   };
