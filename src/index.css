@@ -34,7 +34,15 @@
   }
 }
 
-:root {\n  --cf-powder-blue: #a9d4ef;\n  --cf-soft-lavender: #c9c9f2;\n  --cf-clean-white: #ffffff;\n  --cf-sunset-peach: #f8c6ad;\n  --cf-ink: #303b52;\n}\n\n/* Smooth custom scrollbars */
+:root {
+  --cf-powder-blue: #a9d4ef;
+  --cf-soft-lavender: #c9c9f2;
+  --cf-clean-white: #ffffff;
+  --cf-sunset-peach: #f8c6ad;
+  --cf-ink: #303b52;
+}
+
+/* Smooth custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
