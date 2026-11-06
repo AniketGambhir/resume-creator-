@@ -351,7 +351,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#edf6fc] via-[#fbfbff] to-[#fff1e9] text-[#303b52] flex flex-col font-sans selection:bg-[#dcecf8] selection:text-[#394968]">
       {/* Toast Notification Container */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 animate-fadeIn no-print">
