@@ -80,8 +80,8 @@ const ai = new GoogleGenAI({
 });
 
 // Razorpay configuration
-const razorpayKeyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_careerforge';
-const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || 'careerforge_secret_key_mock_test';
+const razorpayKeyId = process.env.RAZORPAY_KEY_ID || '';
+const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET || '';
 const isRealRazorpay = Boolean(
   process.env.RAZORPAY_KEY_ID &&
   process.env.RAZORPAY_KEY_SECRET &&
@@ -100,7 +100,7 @@ if (isRealRazorpay) {
     console.error('Failed to initialize Razorpay SDK:', e);
   }
 } else {
-  console.log('Running with Razorpay Sandbox Test Mode (Client key:', razorpayKeyId, ')');
+  console.log('Razorpay is not configured. Payment endpoints will remain unavailable until valid API keys are added.');
 }
 
 // ----------------------------------------------------
@@ -174,7 +174,7 @@ app.get('/api/auth/me', (req, res) => {
 
 app.get('/api/razorpay/config', (_req, res) => {
   res.json({
-    keyId: razorpayKeyId,
+    keyId: isRealRazorpay ? razorpayKeyId : null,
     isRealMode: isRealRazorpay,
     testMode: !isRealRazorpay,
     plans: {
