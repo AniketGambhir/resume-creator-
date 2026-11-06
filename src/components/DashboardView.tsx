@@ -189,7 +189,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         : 'bg-slate-200 text-slate-700'
                     }`}
                   >
-                    {plan === 'free' ? '₹0' : plan === 'medium' ? '₹149' : '₹199'}
+                    {plan === 'free' ? '₹0' : plan === 'medium' ? '₹9' : '₹29'}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500">
@@ -225,7 +225,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Purchased Plan</span>
                 <p className="text-base font-bold text-slate-900 capitalize pt-0.5">
-                  {plan === 'free' ? 'Free Starter' : plan === 'medium' ? 'Medium Pro (₹149)' : 'Premium Lifetime (₹199)'}
+                  {plan === 'free' ? 'Free Starter' : plan === 'medium' ? 'Medium Pro (₹9)' : 'Premium Lifetime (₹29)'}
                 </p>
                 <p className="text-[11px] text-slate-500">One-time payment (Lifetime access)</p>
               </div>
