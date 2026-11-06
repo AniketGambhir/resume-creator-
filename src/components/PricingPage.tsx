@@ -18,12 +18,12 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   const currentPlan = user?.plan || 'free';
 
   return (
-    <div className="bg-white min-h-[calc(100vh-64px)] py-16 px-6">
+    <div className="bg-gradient-to-br from-[#edf6fc] via-[#fbfbff] to-[#fff1e9] min-h-[calc(100vh-64px)] py-16 px-6">
       <div className="max-w-6xl mx-auto space-y-16">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50/80 px-3.5 py-1.5 rounded-full border border-blue-200 shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5b8fb7] bg-blue-50/80 px-3.5 py-1.5 rounded-full border border-blue-200 shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#659bc3]" />
             <span>Honest & Transparent Pricing</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">
@@ -37,7 +37,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         {/* 3 Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto">
           {/* 1. FREE PLAN */}
-          <div className="relative rounded-2xl bg-white border border-slate-200 p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+          <div className="relative rounded-2xl bg-white/90 backdrop-blur-sm border border-[#dce8f5] p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
             <div>
               <div className="flex justify-between items-baseline mb-2">
                 <h3 className="text-xl font-bold text-slate-900">FREE</h3>
@@ -57,7 +57,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               {/* Features List */}
               <div className="space-y-3 pt-4 border-t border-slate-100 text-xs">
                 <div className="flex items-start gap-2.5 text-slate-700">
-                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-[#d99074] shrink-0 mt-0.5" />
                   <span>Basic Resume Builder</span>
                 </div>
                 <div className="flex items-start gap-2.5 text-slate-700">
@@ -88,9 +88,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           </div>
 
           {/* 2. MEDIUM PLAN (HIGHLIGHTED AS MOST POPULAR) */}
-          <div className="relative rounded-2xl bg-white border-2 border-blue-600 p-8 shadow-xl ring-4 ring-blue-500/10 flex flex-col justify-between hover:shadow-2xl transition-all scale-[1.02] z-10">
+          <div className="relative rounded-2xl bg-gradient-to-b from-white to-[#f0f8fd] border-2 border-[#9bc9e7] p-8 shadow-xl ring-4 ring-[#a9d4ef]/25 flex flex-col justify-between hover:shadow-2xl transition-all scale-[1.02] z-10">
             {/* Most Popular Badge */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[11px] font-bold px-3.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#78b8df] to-[#a7a8df] text-[#263650] text-[11px] font-bold px-3.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
               <Star className="w-3 h-3 fill-white" />
               <span>Most Popular</span>
             </div>
@@ -163,7 +163,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                   type="button"
                   disabled={isLoadingPlan === 'medium'}
                   onClick={() => onSelectPlan('medium')}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:from-blue-800 text-white font-semibold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-[#78b8df] to-[#a7a8df] hover:brightness-95 active:brightness-90 text-white font-semibold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
                 >
                   {isLoadingPlan === 'medium' ? (
                     <>
@@ -182,9 +182,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           </div>
 
           {/* 3. PREMIUM PLAN (ADVANCED STYLING WITH SUBTLE VIOLET ACCENT) */}
-          <div className="relative rounded-2xl bg-white border border-violet-200 p-8 shadow-md flex flex-col justify-between hover:shadow-xl transition-all relative overflow-hidden">
+          <div className="relative rounded-2xl bg-gradient-to-b from-white to-[#f5f1fc] border border-[#d8cfee] p-8 shadow-md flex flex-col justify-between hover:shadow-xl transition-all relative overflow-hidden">
             {/* Subtle violet highlight badge */}
-            <div className="absolute top-0 right-0 bg-gradient-to-bl from-violet-600 to-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider flex items-center gap-1">
+            <div className="absolute top-0 right-0 bg-gradient-to-bl from-[#a9a2dc] to-[#e8b3a4] text-[#30334e] text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider flex items-center gap-1">
               <Crown className="w-3 h-3" />
               <span>Full Access</span>
             </div>
@@ -195,7 +195,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                   PREMIUM
                 </h3>
                 {currentPlan === 'premium' && (
-                  <span className="text-[11px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[11px] font-bold text-[#897fbd] bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full">
                     Active Plan
                   </span>
                 )}
@@ -210,7 +210,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               {/* Features List */}
               <div className="space-y-3 pt-4 border-t border-slate-100 text-xs">
                 <div className="flex items-start gap-2.5 text-slate-800 font-medium">
-                  <Check className="w-4 h-4 text-violet-600 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-[#938bc8] shrink-0 mt-0.5" />
                   <span>Everything in Medium</span>
                 </div>
                 <div className="flex items-start gap-2.5 text-slate-700">
@@ -251,7 +251,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                   type="button"
                   disabled={isLoadingPlan === 'premium'}
                   onClick={() => onSelectPlan('premium')}
-                  className="w-full py-3 px-4 bg-gradient-to-r from-violet-600 to-indigo-700 hover:from-violet-700 hover:to-indigo-800 active:from-violet-900 text-white font-semibold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-[#a9a2dc] to-[#e8b3a4] hover:brightness-95 active:brightness-90 text-white font-semibold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
                 >
                   {isLoadingPlan === 'premium' ? (
                     <>
@@ -271,7 +271,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         </div>
 
         {/* Razorpay Trust & Payment Methods Banner */}
-        <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-8 max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="bg-gradient-to-r from-[#f0f7fc] via-white to-[#fff1e9] border border-[#e1e7f1] rounded-2xl p-8 max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1.5 text-center md:text-left">
             <div className="flex items-center gap-2 justify-center md:justify-start">
               <ShieldCheck className="w-5 h-5 text-emerald-600" />
